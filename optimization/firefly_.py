@@ -21,13 +21,12 @@ class Firefly:
 class FireflyOptimizer:
 
     def __init__(self, **kwargs):
-        self.population_size = kwargs.get('population_size', 10)
+        self.population_size = int(kwargs.get('population_size', 10))
         self.problem_dim = kwargs.get('problem_dim', 2)
         self.min_bound = kwargs.get('min_bound', -32)
         self.max_bound = kwargs.get('max_bound', 32)
         self.generations = kwargs.get('generations', 10)
         self.population = self._population(self.population_size, self.problem_dim, self.min_bound, self.max_bound)
-        self.delta = kwargs.get('delta', 0.2)  # randomness reduction
         self.gamma = kwargs.get('gamma', 1)  # absorption coefficient
         self.alpha = kwargs.get('alpha', 0.25)  # randomness [0,1]
         self.beta_init = kwargs.get('beta_init', 1)
@@ -47,6 +46,7 @@ class FireflyOptimizer:
             self.population.sort(key=operator.attrgetter('brightness'), reverse=True)
             tmp_population = self.population
             print('Generation %s, best fitness %s' % (t, self.population[0].brightness))
+            # print('Best params:',self.population[0].position)
             for i in range(self.population_size):
                 for j in range(self.population_size):
                     if self.population[i].brightness > tmp_population[j].brightness:
@@ -54,16 +54,19 @@ class FireflyOptimizer:
                         beta = (self.beta_init - self.beta_min) * math.exp(-self.gamma * r ** 2) + self.beta_min
                         tmp = self.alpha * (np.random.random_sample((1, self.problem_dim))[0] - 0.5) * (
                                 self.max_bound - self.min_bound)
-                        self.population[i].position = self.check_position(self.population[i].position * (1 - beta) + tmp_population[
-                            j].position * beta + tmp)
-                        self.population[i].update_brightness()
+                        self.population[j].position = self.check_position(
+                            self.population[i].position * (1 - beta) + tmp_population[
+                                j].position * beta + tmp)
+                        self.population[j].update_brightness()
+        self.population.sort(key=operator.attrgetter('brightness'), reverse=True)
+        return self.population[0].brightness, self.population[0].position
+
 
     def check_position(self, position):
         position[position > self.max_bound] = self.max_bound
         position[position < self.min_bound] = self.min_bound
         return position
 
-
     def _modify_alpha(self):
-        delta = 1-(10**(-4)/0.9)**(1/self.generations)
-        self.alpha = (1-delta)*self.alpha
+        delta = 1 - (10 ** (-4) / 0.9) ** (1 / self.generations)
+        self.alpha = (1 - delta) * self.alpha
