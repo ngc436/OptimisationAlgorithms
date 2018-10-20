@@ -2,17 +2,18 @@ from optimization import generate_population
 from optimization import Ackley
 import numpy as np
 import math
+import operator
 
-
-# numpy.sqrt(numpy.sum((a-b)**2))
 
 class Firefly:
 
     def __init__(self, problem_dim, min_bound, max_bound):
         self.func = Ackley(problem_dim)
         self.position = generate_population(1, problem_dim, min_bound, max_bound)[0]
-        self.brightness = -self.func.get_y(self.position)
-        # self.attractiveness =
+        self.brightness = self.update_brightness()
+
+    def update_brightness(self):
+        return -self.func.get_y(self.position)
 
 
 class FireflyOptimizer:
@@ -28,6 +29,7 @@ class FireflyOptimizer:
         self.gamma = kwargs.get('gamma', 1)  # absorption coefficient
         self.alpha = kwargs.get('alpha', 0.2)  # randomness [0,1]
         self.beta_init = kwargs.get('beta_init', 1)
+        self.optimization_benchmark = kwargs.get('optimization_benchmark', 'Ackley')
 
     @staticmethod
     def _population(population_size, problem_dim, min_bound, max_bound):
@@ -36,21 +38,20 @@ class FireflyOptimizer:
             population.append(Firefly(problem_dim, min_bound, max_bound))
         return population
 
-    def _error(self):
-        raise NotImplementedError
-
-    def run_firefly(self, verbose=1, gamma=0.95, optimization_benchmark='Ackley'):
+    def run_firefly(self):
         for t in range(self.generations):
-            self.population = self.population.sort(key=lambda x: x.brightness)
+            self.population.sort(key=operator.attrgetter('brightness'), reverse=True)
             print('Generation %s, best fitness %s' % (t, self.population[0].brightness))
             for i in range(self.population_size):
                 for j in range(self.population_size):
                     if self.population[i].brightness > self.population[j].brightness:
-                        r = math.sqrt(sum((self.population[i].position - self.population[j].position) ** 2))
-                        beta = (self.beta_init - self.delta) * math.exp((-self.gamma * r) ** 2) + self.delta
-                        tmp = self.alpha*(np.random.random_sample((1, self.problem_dim)))*
-
-                    #     compute_attractiveness()
+                        r = math.sqrt(np.sum((self.population[i].position - self.population[j].position) ** 2))
+                        beta = (self.beta_init - self.delta) * math.exp(-self.gamma * r ** 2) + self.delta
+                        tmp = self.alpha * (np.random.random_sample((1, self.problem_dim)) - 0.5) * (
+                                self.max_bound - self.min_bound)
+                        self.population[i].position = self.population[i].position * (1 - beta) + self.population[
+                            j].position * beta + tmp
+                        self.population[i].update_brightness()
 
     # TODO: implement me too
     def get_fitness(self):
@@ -58,5 +59,5 @@ class FireflyOptimizer:
         raise NotImplementedError
 
 
-f_alg = FireflyOptimizer(population_size=100, problem_dim=10)
-print(f_alg.population)
+f_alg = FireflyOptimizer(population_size=10, problem_dim=2, generations=100)
+f_alg.run_firefly()
