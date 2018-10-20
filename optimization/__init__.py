@@ -1,6 +1,6 @@
-from .firefly_ import FireflyOptimizer
+from .data_generator_ import generate_population
 from .benchmark_functions_ import *
-from .data_generator_ import *
+from .firefly_ import FireflyOptimizer
 
 import sys
 import re
