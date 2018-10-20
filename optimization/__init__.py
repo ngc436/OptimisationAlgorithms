@@ -1,8 +1,3 @@
-from .firefly_ import FireflyOptimizer
+from .data_generator_ import generate_population
 from .benchmark_functions_ import *
-from .data_generator_ import *
-
-import sys
-import re
-import warnings
-import logging
+from .firefly_ import FireflyOptimizer

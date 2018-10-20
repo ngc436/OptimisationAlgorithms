@@ -67,6 +67,3 @@ class Ackley(BaseFunc):
     def get_y(self, x):
         return 20. - 20. * np.exp(-0.2 * np.sqrt(1. / self.dim * np.sum(np.square(x)))) + np.e - np.exp(
             1. / self.dim * np.sum(np.cos(x * 2. * np.pi)))
-
-func = Ackley(3)
-func.plot()
