@@ -1,14 +1,15 @@
-from optimization import generate_population
-from optimization import Ackley
+from optimisation import generate_population
+from optimisation import Ackley, Michalewicz
 import numpy as np
 import math
 import operator
 
 
+# TODO: refactor function optimisation function call
 class Firefly:
 
     def __init__(self, problem_dim, min_bound, max_bound):
-        self.func = Ackley(problem_dim)
+        self.func = Michalewicz(problem_dim)
         self.position = generate_population(1, problem_dim, min_bound, max_bound)[0]
         self.brightness = None
         self.update_brightness()
@@ -27,7 +28,7 @@ class FireflyOptimizer:
         self.max_bound = kwargs.get('max_bound', 5)
         self.generations = kwargs.get('generations', 10)
         self.population = self._population(self.population_size, self.problem_dim, self.min_bound, self.max_bound)
-        self.gamma = kwargs.get('gamma', 1)  # absorption coefficient
+        self.gamma = kwargs.get('gamma', 0.97)  # absorption coefficient
         self.alpha = kwargs.get('alpha', 0.25)  # randomness [0,1]
         self.beta_init = kwargs.get('beta_init', 1)
         self.beta_min = kwargs.get('beta_min', 0.2)
@@ -65,7 +66,6 @@ class FireflyOptimizer:
             self.step()
         self.population.sort(key=operator.attrgetter('brightness'), reverse=True)
         return self.population[0].brightness, self.population[0].position
-
 
     def check_position(self, position):
         position[position > self.max_bound] = self.max_bound

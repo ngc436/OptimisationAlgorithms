@@ -10,7 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 IMG_DIR = 'figures/'
 
-__all__ = ['Ackley']
+__all__ = ['Ackley', 'Michalewicz']
 
 
 class BaseFunc:
@@ -21,6 +21,7 @@ class BaseFunc:
         self.solution = np.zeros(self.dim)
         self.global_optima = 0
         self.plot_place = 0.25
+        self.m = 10
         self.title = ''
 
     def get_global_optima(self):
@@ -72,6 +73,7 @@ class Ackley(BaseFunc):
         return 20. - 20. * np.exp(-0.2 * np.sqrt(1. / self.dim * (x ** 2 + y ** 2))) + np.e - np.exp(
             1. / self.dim * (np.cos(x * 2. * np.pi) + np.cos(y * 2. * np.pi)))
 
+
 class Michalewicz(BaseFunc):
 
     def __init__(self, dim):
@@ -81,10 +83,16 @@ class Michalewicz(BaseFunc):
         self.solution = np.zeros(self.dim)
         self.global_optima = self.get_y(self.solution)
         self.title = 'Michalewicz'
+        self.m = 10
 
     def get_y(self, x):
-        m = 10
         y = 0
         for i in range(self.dim):
-            y += np.sin(x[i]) * np.power(np.sin((i + 1) * np.power(x[i], 2) / np.pi), 2 * m)
+            y += np.sin(x[i]) * np.power(np.sin((i + 1) * np.power(x[i], 2) / np.pi), 2 * self.m)
         return -y
+
+    def get_y_2d(self, x, y):
+        yy = 0
+        yy += np.sin(x) * np.power(np.sin((0 + 1) * np.power(x, 2) / np.pi), 2 * self.m)
+        yy += np.sin(y) * np.power(np.sin((1 + 1) * np.power(y, 2) / np.pi), 2 * self.m)
+        return -yy

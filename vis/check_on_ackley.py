@@ -1,12 +1,11 @@
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from matplotlib import animation
-from optimization import FireflyOptimizer
+from optimisation import FireflyOptimizer
 import numpy as np
-from optimization import Ackley
+from optimisation import Ackley
 
 
-#def animate_firefly_convergence(min_bound=-32, max_bound=32):
 f_alg = FireflyOptimizer(population_size=10, problem_dim=2, generations=100)
 func = Ackley(2)
 
