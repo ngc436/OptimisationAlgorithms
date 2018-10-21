@@ -56,8 +56,7 @@ class FireflyOptimizer:
                         self.population[i].position * (1 - beta) + tmp_population[
                             j].position * beta + tmp)
                     self.population[j].update_brightness()
-        self.population[0].position[0] += np.random.normal(scale=0.5)
-        self.population[0].position[1] += np.random.normal(scale=0.5)
+        self.population[0].position = generate_population(1, self.problem_dim, self.min_bound, self.max_bound)[0]
         self.population[0].update_brightness()
 
     def run_firefly(self):

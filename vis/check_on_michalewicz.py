@@ -5,7 +5,7 @@ from matplotlib import cm
 from optimisation import FireflyOptimizer
 from matplotlib import animation
 
-f_alg = FireflyOptimizer(population_size=10, problem_dim=2, generations=100,
+f_alg = FireflyOptimizer(population_size=40, problem_dim=2, generations=100,
                          min_bound=0, max_bound=np.pi)
 
 func = Michalewicz(2)
@@ -35,7 +35,7 @@ def init():
 
 def animate(i):
     global f_alg, rect, ax, fig
-    ms = int(fig.dpi * 2 * 0.04 * fig.get_figwidth()
+    ms = int(fig.dpi * 2 * 0.004 * fig.get_figwidth()
          / np.diff(ax.get_xbound())[0])
     rect.set_edgecolor('k')
     x = []
@@ -48,8 +48,8 @@ def animate(i):
     particles.set_markersize(ms)
     return particles, rect
 
-ani = animation.FuncAnimation(fig, animate, frames=200, interval=10,
+ani = animation.FuncAnimation(fig, animate, frames=200, interval=2,
                               blit=True, init_func=init)
-ani.save('videos/ackley_firefly.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
+ani.save('videos/mich_firefly.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
 
 plt.show()
