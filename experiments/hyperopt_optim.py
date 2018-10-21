@@ -1,6 +1,6 @@
 # 200 dim optimization
 
-from optimization import FireflyOptimizer
+from optimisation import FireflyOptimizer
 from hyperopt import STATUS_OK, Trials, fmin, hp, tpe
 
 

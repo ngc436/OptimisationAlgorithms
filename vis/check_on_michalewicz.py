@@ -1,31 +1,30 @@
+from optimisation import Michalewicz
+import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import cm
+from optimisation import FireflyOptimizer
 from matplotlib import animation
-from optimization import FireflyOptimizer
-import numpy as np
-from optimization import Ackley
 
+f_alg = FireflyOptimizer(population_size=40, problem_dim=2, generations=100,
+                         min_bound=0, max_bound=np.pi)
 
-#def animate_firefly_convergence(min_bound=-32, max_bound=32):
-f_alg = FireflyOptimizer(population_size=10, problem_dim=2, generations=100)
-func = Ackley(2)
+func = Michalewicz(2)
 
 N = 100
-x = np.linspace(-5, 5, N)
-y = np.linspace(-5, 5, N)
+x = np.linspace(0, np.pi, N)
+y = np.linspace(0, np.pi, N)
 X, Y = np.meshgrid(x, y)
 z = func.get_y_2d(X, Y)
-# dt = 1. / 30
 
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
-ax = fig.add_subplot(111, aspect='equal', xlim=(-5, 5), ylim=(-5, 5))  # autoscale_on=False)
+ax = fig.add_subplot(111, aspect='equal', xlim=(0, np.pi), ylim=(0, np.pi))  # autoscale_on=False)
 cs = ax.contourf(X, Y, z, cmap=cm.PuBu_r)
 cbar = fig.colorbar(cs)
 
 particles, = ax.plot([], [], 'bo', ms=6)
 
-rect = plt.Rectangle([-5, 5], 10, 10, ec='none', lw=2, fc='none')
+rect = plt.Rectangle([0, np.pi], np.pi, np.pi, ec='none', lw=2, fc='none')
 ax.add_patch(rect)
 
 def init():
@@ -36,7 +35,7 @@ def init():
 
 def animate(i):
     global f_alg, rect, ax, fig
-    ms = int(fig.dpi * 2 * 0.04 * fig.get_figwidth()
+    ms = int(fig.dpi * 2 * 0.004 * fig.get_figwidth()
          / np.diff(ax.get_xbound())[0])
     rect.set_edgecolor('k')
     x = []
@@ -49,11 +48,8 @@ def animate(i):
     particles.set_markersize(ms)
     return particles, rect
 
-ani = animation.FuncAnimation(fig, animate, frames=200, interval=10,
+ani = animation.FuncAnimation(fig, animate, frames=200, interval=2,
                               blit=True, init_func=init)
-ani.save('videos/ackley_firefly.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
+ani.save('videos/mich_firefly.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
 
 plt.show()
-
-
-#animate_firefly_convergence()
