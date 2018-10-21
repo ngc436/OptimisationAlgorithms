@@ -18,7 +18,7 @@ def optimize():
         'beta_min': hp.quniform('beta_min', 0, 1, 0.05),
         # optimize for the below params
         'problem_dim': 200,
-        'generations': 50,
+        'generations': 50
     }
     best = fmin(score, space, algo=tpe.suggest, max_evals=100)
     return best

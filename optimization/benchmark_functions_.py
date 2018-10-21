@@ -67,3 +67,24 @@ class Ackley(BaseFunc):
     def get_y(self, x):
         return 20. - 20. * np.exp(-0.2 * np.sqrt(1. / self.dim * np.sum(np.square(x)))) + np.e - np.exp(
             1. / self.dim * np.sum(np.cos(x * 2. * np.pi)))
+
+    def get_y_2d(self, x, y):
+        return 20. - 20. * np.exp(-0.2 * np.sqrt(1. / self.dim * (x ** 2 + y ** 2))) + np.e - np.exp(
+            1. / self.dim * (np.cos(x * 2. * np.pi) + np.cos(y * 2. * np.pi)))
+
+class Michalewicz(BaseFunc):
+
+    def __init__(self, dim):
+        super().__init__(dim)
+        self.max_bound = np.array([np.pi] * self.dim)
+        self.min_bound = np.zeros(self.dim)
+        self.solution = np.zeros(self.dim)
+        self.global_optima = self.get_y(self.solution)
+        self.title = 'Michalewicz'
+
+    def get_y(self, x):
+        m = 10
+        y = 0
+        for i in range(self.dim):
+            y += np.sin(x[i]) * np.power(np.sin((i + 1) * np.power(x[i], 2) / np.pi), 2 * m)
+        return -y
