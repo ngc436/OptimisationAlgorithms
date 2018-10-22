@@ -1,7 +1,7 @@
 # 200 dim optimization
 
-from optimisation import FireflyOptimizer
-from hyperopt import STATUS_OK, Trials, fmin, hp, tpe
+from firefly_optimisation import FireflyOptimizer
+from hyperopt import STATUS_OK, fmin, hp, tpe
 
 
 def score(params):

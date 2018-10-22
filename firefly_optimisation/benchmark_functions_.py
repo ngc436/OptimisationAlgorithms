@@ -1,6 +1,6 @@
 '''
 
-set of benchmark functions for global optimisation
+set of benchmark functions for global firefly_optimisation
 
 '''
 

@@ -1,11 +1,11 @@
-from optimisation import generate_population
-from optimisation import Ackley, Michalewicz
+from data_utils import generate_population
+from firefly_optimisation import Ackley, Michalewicz
 import numpy as np
 import math
 import operator
 
 
-# TODO: refactor function optimisation function call
+# TODO: refactor function firefly_optimisation function call
 class Firefly:
 
     def __init__(self, problem_dim, min_bound, max_bound):
