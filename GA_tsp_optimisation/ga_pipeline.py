@@ -1,12 +1,13 @@
 import numpy as np
 from data_utils import *
 import operator
-
+from GA_tsp_optimisation import Selector
 
 class Path:
     def __init__(self, path, fitness):
         self.path = path
         self.fitness = fitness
+        self._prob = None
 
 
 def _evaluate_fitness(path, coord):
@@ -33,8 +34,8 @@ def _generate_population(num_of_cities, population_size, coord):
 def ga_pipeline(coord=None, population_size=10, generations=10):
     num_of_cities = coord.shape[0]
     population = _generate_population(num_of_cities, population_size, coord)
+    s = Selector(selection_type='roulette')
     population.sort(key=operator.attrgetter('fitness'), reverse=True)
-    print(population)
     for individ in population:
         print(individ)
 

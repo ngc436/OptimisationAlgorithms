@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 def read_tsp_file(fname):
-    with open(os.path.dirname(__file__)+'\\data\\%s' % fname) as f:
+    with open(os.path.dirname(__file__)+'/data/%s' % fname) as f: # change for windows
         while f.readline() != 'TYPE : TSP\n':
             pass
         points_count = int(f.readline().split(':')[1])
