@@ -1,8 +1,9 @@
 import operator
 
+
 class Selector:
     def __init__(self, selection_type):
-        assert selection_type in ['fitness_proportionate', 'tournament']
+        assert selection_type in ['roulette', 'tournament']
         self.selection_type = selection_type
 
     def selection(self, **kwargs):
@@ -17,9 +18,8 @@ class Selector:
         for individ in population:
             overall_fitness += individ.fitness
         for individ in population:
-            individ._prob = individ.fitness/overall_fitness
+            individ._prob = individ.fitness / overall_fitness
         population.sort(key=operator.attrgetter('_prob'), reverse=True)
-
 
     def _tournament(self, **kwargs):
         raise NotImplementedError

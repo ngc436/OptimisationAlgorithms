@@ -2,6 +2,8 @@ import numpy as np
 from data_utils import *
 import operator
 from GA_tsp_optimisation import Selector
+from vis import *
+
 
 class Path:
     def __init__(self, path, fitness):
@@ -40,5 +42,8 @@ def ga_pipeline(coord=None, population_size=10, generations=10):
         print(individ)
 
 
-coord = read_tsp_file('xqf131.tsp')
+fname = 'xqf131.tsp'
+coord = read_tsp_file(fname)
+plot_points(coord, 'Benchmark %s' % fname)
+print(coord)
 ga_pipeline(coord)
