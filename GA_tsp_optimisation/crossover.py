@@ -54,4 +54,4 @@ class Crossover:
                     offspring_2[current_ix] = elem
                 current_ix += 1
         offspring_2[min_ix:max_ix] = set_2
-        return list(map(int,offspring_1)), list(map(int, offspring_2))
+        return list(map(int, offspring_1)), list(map(int, offspring_2))

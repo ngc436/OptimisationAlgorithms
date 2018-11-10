@@ -1,4 +1,5 @@
 import operator
+import random
 
 
 class Selector:
@@ -8,18 +9,29 @@ class Selector:
 
     def selection(self, **kwargs):
         if self.selection_type == 'roulette':
-            self._roulette(**kwargs)
+            return self._roulette(**kwargs)
         if self.selection_type == 'tournament':
-            self._tournament(**kwargs)
+            return self._tournament(**kwargs)
+
+    def yield_mating_pairs(self, pairs, population):
+        for j in range(pairs):
+            chosen = []
+            for _ in range(2):
+                selection_probability = random.random()
+                for individ in population:
+                    if selection_probability <= individ._prob:
+                        chosen.append(individ)
+                        break
+            yield chosen[0], chosen[1]
 
     def _roulette(self, **kwargs):
         population = kwargs.get('population')
-        overall_fitness = 0
+        population.sort(key=operator.attrgetter('fitness'), reverse=True)
+        cumsum_fitness = 0
         for individ in population:
-            overall_fitness += individ.fitness
-        for individ in population:
-            individ._prob = individ.fitness / overall_fitness
-        population.sort(key=operator.attrgetter('_prob'), reverse=True)
+            cumsum_fitness += individ.fitness
+            individ._prob = individ.fitness / cumsum_fitness
+        return self.yield_mating_pairs(len(population)//2, population)
 
     def _tournament(self, **kwargs):
         raise NotImplementedError

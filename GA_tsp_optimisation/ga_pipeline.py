@@ -1,8 +1,8 @@
-import numpy as np
 from data_utils import *
 import operator
 from GA_tsp_optimisation import Selector
 from vis import *
+import random
 
 
 class Path:
@@ -37,13 +37,7 @@ def ga_pipeline(coord=None, population_size=10, generations=10):
     num_of_cities = coord.shape[0]
     population = _generate_population(num_of_cities, population_size, coord)
     s = Selector(selection_type='roulette')
-    population.sort(key=operator.attrgetter('fitness'), reverse=True)
-    for individ in population:
-        print(individ)
+    pairs_generator = s.selection(population=population)
+    for i, j in pairs_generator:
+        print(i.fitness, j.fitness)
 
-
-fname = 'xqf131.tsp'
-coord = read_tsp_file(fname)
-plot_points(coord, 'Benchmark %s' % fname)
-print(coord)
-ga_pipeline(coord)
