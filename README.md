@@ -20,7 +20,7 @@ Zeugmann), Lecture Notes in Computer Science, 5792: 169-178 (2009).
 
 Python implementation Genetic Algorithm for solving Travelling Salesman Problem.
 
-- [ ] Implement basic pipeline
+- [x] Implement basic pipeline
 - [ ] Check on several tsp benchmarks
 - [ ] Tune parameters
 - [ ] Prepare results visualization
