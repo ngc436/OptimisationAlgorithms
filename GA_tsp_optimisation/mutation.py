@@ -17,7 +17,6 @@ class Mutation:
     def swap_mutation(self, **kwargs):
         individ = kwargs.get('individ')
         ix = np.random.choice(len(individ), 2, replace=False)
-        print(ix)
         tmp = individ[ix[0]]
         individ[ix[0]] = individ[ix[1]]
         individ[ix[1]] = tmp

@@ -26,14 +26,11 @@ class Crossover:
         cut_ix = np.random.choice(points_num - 2, 2, replace=False)
         min_ix = np.min(cut_ix)
         max_ix = np.max(cut_ix)
-        print(min_ix, max_ix)
         offspring_1 = np.zeros(points_num)
         current_ix = 0
         set_1 = parent_1[min_ix:max_ix]
-        print(set_1)
         for i, elem in enumerate(parent_2):
             if elem not in set_1:
-                print(i, elem, current_ix)
                 if current_ix != min_ix:
                     offspring_1[current_ix] = elem
                 else:
@@ -46,7 +43,6 @@ class Crossover:
         set_2 = parent_2[min_ix:max_ix]
         for i, elem in enumerate(parent_1):
             if elem not in set_2:
-                print(i, elem, current_ix)
                 if current_ix != min_ix:
                     offspring_2[current_ix] = elem
                 else:
@@ -54,4 +50,4 @@ class Crossover:
                     offspring_2[current_ix] = elem
                 current_ix += 1
         offspring_2[min_ix:max_ix] = set_2
-        return list(map(int,offspring_1)), list(map(int, offspring_2))
+        return [int(i) for i in offspring_1], [int(i) for i in offspring_2]
