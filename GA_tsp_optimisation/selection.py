@@ -19,19 +19,23 @@ class Selector:
             for _ in range(2):
                 selection_probability = random.random()
                 for individ in population:
-                    if selection_probability <= individ._prob:
+                    if selection_probability >= individ._prob:
                         chosen.append(individ)
                         break
+            if len(chosen) < 2:
+                chosen.append(population[-1])
+                if len(chosen) == 1:
+                    chosen.append(population[-2])
             yield chosen[0], chosen[1]
 
     def _roulette(self, **kwargs):
         population = kwargs.get('population')
-        population.sort(key=operator.attrgetter('fitness'), reverse=True)
+        best_population = kwargs.get('best_perc')
         cumsum_fitness = 0
         for individ in population:
             cumsum_fitness += individ.fitness
             individ._prob = individ.fitness / cumsum_fitness
-        return self.yield_mating_pairs(len(population)//2, population)
+        return self.yield_mating_pairs(int(len(population) - int(len(population) * best_population))//2 + 1, population)
 
     def _tournament(self, **kwargs):
         raise NotImplementedError
