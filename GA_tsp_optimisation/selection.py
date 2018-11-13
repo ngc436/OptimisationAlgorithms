@@ -30,12 +30,12 @@ class Selector:
 
     def _roulette(self, **kwargs):
         population = kwargs.get('population')
-        population.sort(key=operator.attrgetter('fitness'), reverse=True)
+        best_population = kwargs.get('best_perc')
         cumsum_fitness = 0
         for individ in population:
             cumsum_fitness += individ.fitness
             individ._prob = individ.fitness / cumsum_fitness
-        return self.yield_mating_pairs(len(population), population)
+        return self.yield_mating_pairs(int(len(population) - int(len(population) * best_population))//2 + 1, population)
 
     def _tournament(self, **kwargs):
         raise NotImplementedError
