@@ -23,4 +23,4 @@ Python implementation Genetic Algorithm for solving Travelling Salesman Problem.
 - [x] Implement basic pipeline
 - [ ] Check on several tsp benchmarks
 - [ ] Tune parameters
-- [ ] Prepare results visualization
+- [x] Prepare results visualization

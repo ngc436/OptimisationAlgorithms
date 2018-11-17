@@ -2,6 +2,7 @@ from data_utils import *
 import operator
 from GA_tsp_optimisation import Selector, Crossover, Mutation
 from vis import *
+from data_utils import create_matrix
 
 coordinates = None
 matrix = None
@@ -37,16 +38,17 @@ def _generate_population(num_of_cities, population_size):
     return population
 
 
-def ga_pipeline(mat=None, population_size=20, generations=10000, best_perc=0.2, mutation_rate=0.2):
+def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2, mutation_rate=0.2, verbose=1, coord=None):
     num_of_cities = mat.shape[0]
     global matrix
     matrix = mat
+    global coordinates
+    coordinates = coord
     population = _generate_population(num_of_cities, population_size)
     s = Selector(selection_type='roulette')
     c = Crossover(crossover_type='ordered')
-    # TODO: plot path once in 1000 generations
+    x, y = [], []
     for ii in range(generations):
-        print('========== generation %s ==========' % ii)
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
         new_generation = []
         for i in range(int(population_size * best_perc)):
@@ -63,4 +65,12 @@ def ga_pipeline(mat=None, population_size=20, generations=10000, best_perc=0.2, 
         for i in random_ind:
             population[i].update_path(m.mutation(population[i].path))
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
-        print('best so far: %s\n' % population[0].fitness)
+        if verbose:
+            print('========== generation %s ==========' % ii)
+            print('best so far: %s\n' % population[0].fitness)
+        x.append(ii)
+        y.append(population[0].fitness)
+        if ii % 100 == 0:
+            draw_path(population[0].path, coordinates, ii)
+    draw_convergence(x, y)
+    return population[0].fitness
