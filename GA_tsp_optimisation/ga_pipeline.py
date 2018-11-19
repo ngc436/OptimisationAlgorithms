@@ -38,7 +38,9 @@ def _generate_population(num_of_cities, population_size):
     return population
 
 
-def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2, mutation_rate=0.2, verbose=1, coord=None):
+def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
+                mutation_rate=0.2, mutation_intensity=0.3,
+                verbose=1, coord=None, plot=0):
     num_of_cities = mat.shape[0]
     global matrix
     matrix = mat
@@ -47,6 +49,7 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2, mu
     population = _generate_population(num_of_cities, population_size)
     s = Selector(selection_type='roulette')
     c = Crossover(crossover_type='ordered')
+    m = Mutation(mutation_type='swap')
     x, y = [], []
     for ii in range(generations):
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
@@ -61,16 +64,17 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2, mu
         population = new_generation[:population_size]
         random_ind = np.random.choice([i for i in range(1, population_size)], size=int(mutation_rate * population_size),
                                       replace=False)
-        m = Mutation(mutation_type='swap')
         for i in random_ind:
-            population[i].update_path(m.mutation(population[i].path))
+            population[i].update_path(m.mutation(population[i].path, mutation_intensity=mutation_intensity))
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
         if verbose:
             print('========== generation %s ==========' % ii)
             print('best so far: %s\n' % population[0].fitness)
         x.append(ii)
         y.append(population[0].fitness)
-        if ii % 100 == 0:
-            draw_path(population[0].path, coordinates, ii)
-    draw_convergence(x, y)
+        if plot:
+            if ii % 500 == 0:
+                draw_path(population[0].path, coordinates, ii)
+    draw_convergence(x, y, 'ps = %s, bp = %s, mr = %s, mi = %s' % (
+            population_size, best_perc, mutation_rate, mutation_intensity))
     return population[0].fitness

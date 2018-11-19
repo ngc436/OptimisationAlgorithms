@@ -10,18 +10,18 @@ class Crossover:
             return self.crossover_pmx(parent_1=parent_1, parent_2=parent_2)
         if self.crossover_type == 'ordered':
             return self.ordered_crossover(parent_1=parent_1, parent_2=parent_2)
+        if self.crossover_type == 'cycle':
+            return self.cycle_crossover(parent_1=parent_1, parent_2=parent_2)
 
-    def crossover_pmx(self, **kwargs):
-        parent_1 = kwargs.get('parent_1')
-        parent_2 = kwargs.get('parent_2')
+    def crossover_pmx(self, parent_1, parent_2):
         points_num = len(parent_1)
         cut_ix = np.random.choice(points_num - 2, 2, replace=False)
         min_ix = np.min(cut_ix)
         max_ix = np.max(cut_ix)
+        offspring_1 = np.zeros(points_num)
 
-    def ordered_crossover(self, **kwargs):
-        parent_1 = kwargs.get('parent_1')
-        parent_2 = kwargs.get('parent_2')
+
+    def ordered_crossover(self, parent_1, parent_2):
         points_num = len(parent_1)
         cut_ix = np.random.choice(points_num - 2, 2, replace=False)
         min_ix = np.min(cut_ix)
@@ -51,3 +51,6 @@ class Crossover:
                 current_ix += 1
         offspring_2[min_ix:max_ix] = set_2
         return [int(i) for i in offspring_1], [int(i) for i in offspring_2]
+
+    def cycle_crossover(self, parent_1, parent_2):
+        raise NotImplementedError

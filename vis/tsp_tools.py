@@ -15,15 +15,16 @@ def draw_path(path, coords, iteration):
         x = [coords[path[i]][0], coords[path[i + 1]][0]]
         y = [coords[path[i]][1], coords[path[i + 1]][1]]
         plt.plot(x, y, marker='o', markersize=2)
+    plt.plot([coords[path[len(path)-1]][0], coords[path[0]][0]], [coords[path[len(path)-1]][1], coords[path[0]][1]], marker='o', markersize=2)
     plt.title('Mininmal path on %s iteration' % iteration)
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
 
 
-def draw_convergence(x_list, y_list):
+def draw_convergence(x_list, y_list, params):
     plt.plot(x_list, y_list)
     plt.xlabel('Iteration')
     plt.ylabel('Minimal distance')
-    plt.title('GA convergence')
+    plt.title('GA convergence %s'%params)
     plt.show()
