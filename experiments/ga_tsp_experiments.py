@@ -40,18 +40,18 @@ def hyperopt_optimization():
     return best
 
 
-def run_tsp(population_size, best_perc, mutation_rate, genetations, coord):
+def run_tsp(population_size, best_perc, mutation_probability, generations, coord):
     val = ga_pipeline(mat=matrix, population_size=population_size,
-                      best_perc=best_perc, mutation_rate=mutation_rate,
-                      generations=genetations, verbose=1, coord=coord, plot=1)
+                      best_perc=best_perc, mutation_probability=mutation_probability,
+                      generations=generations, verbose=1, coord=coord, plot=1)
     return val
 
 
 def main():
     # print(hyperopt_optimization())
     print(
-        run_tsp(mutation_rate=0.4, best_perc=0.3,
-                population_size=40, genetations=100000, coord=coord))
+        run_tsp(mutation_probability=0.4, best_perc=0.3,
+                population_size=40, generations=5000, coord=coord))
 
 
 if __name__ == '__main__':

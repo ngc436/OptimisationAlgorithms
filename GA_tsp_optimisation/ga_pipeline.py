@@ -24,7 +24,7 @@ def _evaluate_fitness(path):
     dist = 0
     for i in range(len(path) - 1):
         if i == (len(path) - 1):
-            dist += matrix[path[0]][path[i]]
+            dist += matrix[path[0]][path[i + 1]]
             break
         dist += matrix[path[i + 1]][path[i]]
     return dist
@@ -40,7 +40,7 @@ def _generate_population(num_of_cities, population_size):
 
 
 def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
-                mutation_rate=0.2, mutation_intensity=0.3,
+                mutation_probability=0.2, mutation_intensity=0.3,
                 verbose=1, coord=None, plot=0):
     num_of_cities = mat.shape[0]
     global matrix
@@ -64,8 +64,7 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
             new_generation.append(Path(child_2))
         population = new_generation[:population_size]
         for i in range(1, len(population)):
-            if random.random() < mutation_rate:
-                population[i].update_path(m.mutation(population[i].path))
+            population[i].update_path(m.mutation(population[i].path, mutation_probability=mutation_probability))
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
         if verbose:
             print('========== generation %s ==========' % ii)
@@ -76,5 +75,5 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
             if ii % 500 == 0:
                 draw_path(population[0].path, coordinates, ii)
     draw_convergence(x, y, 'ps = %s, bp = %s, mr = %s, mi = %s' % (
-            round(population_size, 2), round(best_perc, 2), round(mutation_rate,2), round(mutation_intensity, 2)))
+        round(population_size, 2), round(best_perc, 2), round(mutation_probability, 2), round(mutation_intensity, 2)))
     return population[0].fitness
