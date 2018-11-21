@@ -14,10 +14,16 @@ class Mutation:
 
     def rsm(self, **kwargs):
         individ = kwargs.get('individ')
-        print(individ)
-        ix = np.random.choice(len(individ), 2, replace=False).tolist()
-        sub = individ[min(ix), max(ix)]
-        print(ix, sub)
+        ix_len = 0
+        while ix_len < 1:
+            ix = np.random.choice(len(individ), 2, replace=False)
+            ix_len = len(ix)
+        sub = individ[min(ix): max(ix)]
+        sub = sub[::-1]
+        individ[min(ix): max(ix)] = sub
+        return individ
+
+    # def
 
     def swap_mutation(self, **kwargs):
         individ = kwargs.get('individ')
@@ -29,7 +35,3 @@ class Mutation:
                 individ[ix[0]] = individ[ix[1]]
                 individ[ix[1]] = tmp
         return individ
-
-
-m = Mutation('rsm')
-m.mutation(individ=[0, 1, 2, 3, 4, 5, 6, 7, 8])

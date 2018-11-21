@@ -3,6 +3,7 @@ import operator
 from GA_tsp_optimisation import Selector, Crossover, Mutation
 from vis import *
 from data_utils import create_matrix
+import random
 
 coordinates = None
 matrix = None
@@ -49,7 +50,7 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
     population = _generate_population(num_of_cities, population_size)
     s = Selector(selection_type='roulette')
     c = Crossover(crossover_type='ordered')
-    m = Mutation(mutation_type='swap')
+    m = Mutation(mutation_type='rsm')
     x, y = [], []
     for ii in range(generations):
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
@@ -62,10 +63,9 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
             new_generation.append(Path(child_1))
             new_generation.append(Path(child_2))
         population = new_generation[:population_size]
-        random_ind = np.random.choice([i for i in range(1, population_size)], size=int(mutation_rate * population_size),
-                                      replace=False)
-        for i in random_ind:
-            population[i].update_path(m.mutation(population[i].path, mutation_intensity=mutation_intensity))
+        for i in range(1, len(population)):
+            if random.random() < mutation_rate:
+                population[i].update_path(m.mutation(population[i].path))
         population.sort(key=operator.attrgetter('fitness'), reverse=False)
         if verbose:
             print('========== generation %s ==========' % ii)
@@ -76,5 +76,5 @@ def ga_pipeline(mat=None, population_size=20, generations=200, best_perc=0.2,
             if ii % 500 == 0:
                 draw_path(population[0].path, coordinates, ii)
     draw_convergence(x, y, 'ps = %s, bp = %s, mr = %s, mi = %s' % (
-            population_size, best_perc, mutation_rate, mutation_intensity))
+            round(population_size, 2), round(best_perc, 2), round(mutation_rate,2), round(mutation_intensity, 2)))
     return population[0].fitness
